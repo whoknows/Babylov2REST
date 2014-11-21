@@ -1,14 +1,14 @@
 <?php
 
-class Game extends Phalcon\Mvc\Model
+class Slot extends Phalcon\Mvc\Model
 {
 
     public function initialize()
     {
         $this->hasManyToMany(
             "id",
-            "UsersGames",
-            "game_id",
+            "UsersSlots",
+            "slot_id",
             "user_id",
             "User",
             "id",
