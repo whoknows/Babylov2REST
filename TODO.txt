@@ -2,9 +2,15 @@ TODO :
 
 Back :
 V Création du projet sur git
-- Création d'un projet Phalcon REST basique
+V Création d'un projet Phalcon REST basique
 - Création des modèles liés à ma base de données
-- Récupération des données basique (liste des utilisateurs)
+    V User
+    * Game
+    * Schedule
+    * Roles
+    * UserGame
+    * UserRoles
+V Récupération des données basique (liste des utilisateurs)
 - Récupération des données avancée (liste des parties jouées avec les utilisateurs ayant joués)
 - Définition des algorithmes de calculs (score, ratio)
 - Récupération des données pour les graphes
@@ -24,3 +30,10 @@ Front :
     * Insertion
     * Modification
     * Suppression
+
+
+
+http://cujojs.com/
+https://www.digitalocean.com/community/tutorials
+https://github.com/myagoo/fluxbone
+reflux

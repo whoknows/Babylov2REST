@@ -1,7 +1,7 @@
 <?php
 
 $loader = new \Phalcon\Loader();
-$loader->registerDirs(array(__DIR__ . '/models/'))->register();
+$loader->registerDirs(array(__DIR__ . '/Models/'))->register();
 
 $di = new \Phalcon\DI\FactoryDefault();
 $di->set('db', function(){
@@ -16,34 +16,36 @@ $di->set('db', function(){
 //Create and bind the DI to the application
 $app = new \Phalcon\Mvc\Micro($di);
 
-//Retrieves all robots
-$app->get('/api/robots', function() {
+$app->get('/api/user', function() use ($app) {
+    $user = User::findFirst(2);
 
+    $data = array();
+
+    foreach ($user->games as $userGame) {
+        $data[] = $userGame;
+    }
+
+    echo json_encode($data);
 });
 
-//Searches for robots with $name in their name
-$app->get('/api/robots/search/{name}', function($name) {
-
+$app->get('/api/user/search/{name}', function($name) use ($app) {
+    // Finds a user by name
 });
 
-//Retrieves robots based on primary key
-$app->get('/api/robots/{id:[0-9]+}', function($id) {
-
+$app->get('/api/user/{id:[0-9]+}', function($id) use ($app) {
+    // Finds a user by ud
 });
 
-//Adds a new robot
-$app->post('/api/robots', function() {
-
+$app->post('/api/user', function() use ($app) {
+    // Adds a new user
 });
 
-//Updates robots based on primary key
-$app->put('/api/robots/{id:[0-9]+}', function() {
-
+$app->put('/api/user/{id:[0-9]+}', function() use ($app) {
+    // Updates user based on primary key
 });
 
-//Deletes robots based on primary key
-$app->delete('/api/robots/{id:[0-9]+}', function() {
-
+$app->delete('/api/user/{id:[0-9]+}', function() use ($app) {
+    // Deletes user based on primary key
 });
 
 $app->handle();
