@@ -4,7 +4,7 @@ class User extends Phalcon\Mvc\Model
 {
 
     public static $stdData = array(
-        //'enabled' => 0,
+        'enabled' => 0,
         'gravatar' => '',
         'roles' => array(),
         'username' => 'N/A',
@@ -36,12 +36,21 @@ class User extends Phalcon\Mvc\Model
         $data = self::$stdData;
 
         $data['username'] = $user->username;
-        //$data['enabled'] = $user->enabled;
-        foreach ($user->roles as $role) {
-            $data['roles'][] = $role->name;
-        }
-
+        $data['enabled'] = $user->enabled;
+        $data['roles'] = self::getRoles($user);
         $data['gameData'] = self::getGameData($user);
+        $data['gravatar'] = self::getGravatar($user->email);
+
+        return $data;
+    }
+
+    public static function getRoles($user)
+    {
+        $data = array();
+
+        foreach ($user->roles as $role) {
+            $data[] = $role->name;
+        }
 
         return $data;
     }

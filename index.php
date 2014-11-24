@@ -22,7 +22,7 @@ $app = new \Phalcon\Mvc\Micro($di);
 $app->get('/api/user', function() use ($app) {
     $users = User::getFullList();
 
-    //echo json_encode($users);
+    echo json_encode($users);
 });
 
 $app->get('/api/user/search/{name}', function($name) use ($app) {
