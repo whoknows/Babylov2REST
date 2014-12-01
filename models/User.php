@@ -1,6 +1,8 @@
 <?php
 
-class User extends Phalcon\Mvc\Model
+namespace Model;
+
+class User
 {
 
     public static $stdData = array(
@@ -64,38 +66,5 @@ class User extends Phalcon\Mvc\Model
             $data['played']++;
             echo json_encode($game) . PHP_EOL;exit;
         }
-    }
-
-    public function initialize()
-    {
-        $this->hasManyToMany(
-            "id",
-            "UsersGames",
-            "user_id",
-            "game_id",
-            "Game",
-            "id",
-            array('alias' => 'games')
-        );
-
-        $this->hasManyToMany(
-            "id",
-            "UsersRoles",
-            "user_id",
-            "role_id",
-            "Roles",
-            "id",
-            array('alias' => 'roles')
-        );
-
-        $this->hasManyToMany(
-            "id",
-            "UsersSlots",
-            "user_id",
-            "slot_id",
-            "Slot",
-            "id",
-            array('alias' => 'slots')
-        );
     }
 }

@@ -1,18 +1,9 @@
 <?php
 
-class Roles extends Phalcon\Mvc\Model
+namespace Model;
+
+class Roles
 {
 
-    public function initialize()
-    {
-        $this->hasManyToMany(
-            "id",
-            "UsersRoles",
-            "role_id",
-            "user_id",
-            "User",
-            "id",
-            array('alias' => 'users')
-        );
-    }
+    //
 }

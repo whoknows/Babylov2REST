@@ -1,18 +1,9 @@
 <?php
 
-class Game extends Phalcon\Mvc\Model
+namespace Model;
+
+class Game
 {
 
-    public function initialize()
-    {
-        $this->hasManyToMany(
-            "id",
-            "UsersGames",
-            "game_id",
-            "user_id",
-            "User",
-            "id",
-            array('alias' => 'users')
-        );
-    }
+    //
 }
