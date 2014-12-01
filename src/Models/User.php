@@ -19,16 +19,25 @@ class User
             'playedThisMonth' => 0,
             'wonThisMonth' => 0,
             'lostThisMonth' => 0,
-            'totalThisMonth' => 0
+            'totalThisMonth' => 0,
+            'playedLastMonth' => 0,
+            'wonLastMonth' => 0,
+            'lostLastMonth' => 0,
+            'totalLastMonth' => 0
         )
     );
 
     public static function getFullList($filter = "")
     {
         $data = array();
-return self::doUsersQuery($filter);
-        foreach (self::doUsersQuery("WHERE enabled = 1") as $userGame) {
-            $data[$userGame['id']] = self::makeDataForOneUser($userGame);
+
+        foreach (Game::getAllGames($filter) as $userGame) {
+            if (!isset($data[$userGame['id']])) {
+                $data[$userGame['id']] = self::makeDataForOneUser($userGame);
+            }
+
+            self::incrementGameData($data[$userGame['id']]['gameData'], $userGame);
+            self::setTotals($data[$userGame['id']]['gameData']);
         }
 
         return $data;
@@ -38,31 +47,35 @@ return self::doUsersQuery($filter);
     {
         $ret = self::$stdData;
 
-        //
+        $ret['id'] = $user['id'];
+        $ret['username'] = $user['username'];
+        $ret['gravatar'] = self::getGravatar($user['email']);
+        $ret['enabled'] = $user['enabled'];
 
         return $ret;
     }
 
-    public static function doUsersQuery($filter = "")
+    public static function incrementGameData(&$gameData, $game)
     {
-        $sql = "SELECT id, username, email, enabled, SUM(won) as won, COUNT(won) as total, CONCAT(YEAR(date), '.', MONTH(date)) as yearmonth FROM
-                (SELECT
-                    a.id,
-                    username,
-                    email,
-                    enabled,
-                    date,
-                    IF((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1), 1, 0) as won
-                FROM user a
-                INNER JOIN users_games b ON a.id = b.user_id
-                INNER JOIN game c ON c.id = b.game_id
-                $filter) osef
-                GROUP BY id, yearmonth ";
+        $k = '';
+        if(date('Y.m', strtotime('last month')) == $game['yearmonth']){
+            $k = 'LastMonth';
+        } elseif (date('Y.m') == $game['yearmonth']) {
+            $k = 'ThisMonth';
+        }
 
-        $bdd = \Config\Database::getInstance();
-        $req = $bdd->getConnection()->query($sql);
+        $gameData['won' . $k] += $game['won'];
+        $gameData['lost' . $k] += ($game['total'] - $game['won']);
+        $gameData['played' . $k] += $game['total'];
+    }
 
-        return $req->fetchAll(\PDO::FETCH_ASSOC);
+    public static function setTotals(&$gameData)
+    {
+        $total = Game::getTotalGames();
+
+        $gameData['total'] = array_sum($total);
+        $gameData['totalThisMonth'] = isset($total[date('Y.m')]) ? $total[date('Y.m')] : 0;
+        $gameData['totalLastMonth'] = isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0;
     }
 
     public static function getGravatar($email, $s = 40, $d = 'mm', $r = 'x', $img = false, $atts = array())
