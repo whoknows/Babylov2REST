@@ -51,6 +51,7 @@ class User
         $ret['username'] = $user['username'];
         $ret['gravatar'] = self::getGravatar($user['email']);
         $ret['enabled'] = $user['enabled'];
+        $ret['roles'] = explode(',', Roles::getRoles("WHERE user_id = " . $user['id']));
 
         return $ret;
     }
