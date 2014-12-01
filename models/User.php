@@ -4,6 +4,7 @@ class User extends Phalcon\Mvc\Model
 {
 
     public static $stdData = array(
+        'id' => 0,
         'enabled' => 0,
         'gravatar' => '',
         'roles' => array(),
