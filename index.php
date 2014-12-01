@@ -1,4 +1,5 @@
 <?php
+
 require 'vendor/autoload.php';
 
 $app = new \Slim\Slim(array(
@@ -6,7 +7,7 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->get('/users', function () use ($app) {
-    $users = array('toto');
+    $users = \Models\User::getFullList("WHERE enabled = 1");
     $app->response()->header('Content-Type', 'application/json');
 
     echo json_encode($users);

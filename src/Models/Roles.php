@@ -4,6 +4,5 @@ namespace Model;
 
 class Roles
 {
-
     //
 }

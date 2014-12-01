@@ -1,4 +1,12 @@
 {
+    "name": "Babylov3REST",
+    "description": "The rest api for Babylov3",
+    "autoload": {
+        "psr-0": {
+            "Config": "src/",
+            "Model": "src/"
+        }
+    },
     "require": {
         "slim/slim": "2.*"
     }
