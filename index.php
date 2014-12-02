@@ -7,7 +7,7 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->get('/users', function () {
-    echo json_encode(array_values(\Models\User::getFullList("WHERE enabled = 1")));
+    echo json_encode(array_values(\Models\User::getFullList()));
 });
 
 $app->get('/users/:id', function ($id) {
@@ -18,6 +18,13 @@ $app->get('/users/:id', function ($id) {
     }
 
     echo json_encode($user);
+});
+
+/**
+ * Parties
+ */
+$app->get('/games/:limit', function($limit){
+    echo json_encode(array_values(\Models\Game::getAllGames("", "LIMIT 0," . ($limit * 4))));
 });
 
 /**
