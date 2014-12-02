@@ -36,4 +36,24 @@ class Slot
 
         return $ret;
     }
+
+    public static function put($slot, $user)
+    {
+        $sql = "INSERT INTO users_slots (user_id, date, slot_id) SELECT $user as user_id, CURDATE() as date, id FROM slot WHERE name = '$slot'";
+
+        $bdd = \Config\Database::getInstance();
+        $req = $bdd->getConnection()->exec($sql);
+
+        return $req !== false;
+    }
+
+    public static function delete($slot, $user)
+    {
+        $sql = "DELETE FROM users_slots WHERE date = CURDATE() AND user_id = $user AND slot_id = (SELECT id FROM slot WHERE name = '$slot')";
+
+        $bdd = \Config\Database::getInstance();
+        $req = $bdd->getConnection()->exec($sql);
+
+        return $req !== false;
+    }
 }
