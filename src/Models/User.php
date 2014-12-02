@@ -31,7 +31,7 @@ class User
     {
         $data = array();
 
-        foreach (Game::getAllGames($filter) as $userGame) {
+        foreach (Game::getUsersGameData($filter) as $userGame) {
             if (!isset($data[$userGame['id']])) {
                 $data[$userGame['id']] = self::makeDataForOneUser($userGame);
             }

@@ -7,6 +7,11 @@ class Game
 
     public static function getAllGames($filter = "")
     {
+        //
+    }
+
+    public static function getUsersGameData($filter = "")
+    {
         $sql = "SELECT id, username, email, enabled, SUM(won) as won, COUNT(won) as total,
                         CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth FROM
                 (SELECT
@@ -20,7 +25,7 @@ class Game
                 INNER JOIN users_games b ON a.id = b.user_id
                 INNER JOIN game c ON c.id = b.game_id
                 $filter) osef
-                GROUP BY id, yearmonth ";
+                GROUP BY id, yearmonth";
 
         $bdd = \Config\Database::getInstance();
         $req = $bdd->getConnection()->query($sql);
@@ -28,9 +33,6 @@ class Game
         return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     *
-     */
     public static function getTotalGames($filter = "")
     {
         $sql = "SELECT COUNT(id) as total, CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth
