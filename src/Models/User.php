@@ -94,4 +94,40 @@ class User
 
         return $url;
     }
+
+    public static function getUniqueUser($users)
+    {
+        if (sizeof($users) == 1) {
+            return array_values($users)[0];
+        }
+
+        return null;
+    }
+
+    public static function isUserConnected()
+    {
+        return isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : null;
+    }
+
+    public static function doLoginAction($login, $password)
+    {
+        //$login = \PDO::quote($login);
+        //$password = \PDO::quote($password);
+        $user = User::getUniqueUser(self::getFullList("WHERE username = '$login' AND password = '$password'"));
+
+        if ($user !== null) {
+            $_SESSION['currentUser'] = $user;
+        } else {
+            $user = array('message' => 'Mauvais login/mot de passe.');
+        }
+
+        return $user;
+    }
+
+    public static function doLogoutAction()
+    {
+        $_SESSION['currentUser'] = null;
+
+        return null;
+    }
 }
