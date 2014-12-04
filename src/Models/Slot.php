@@ -37,7 +37,7 @@ class Slot
         return $ret;
     }
 
-    public static function put($slot, $user)
+    public static function post($slot, $user)
     {
         $sql = "INSERT INTO users_slots (user_id, date, slot_id) SELECT $user as user_id, CURDATE() as date, id FROM slot WHERE name = '$slot'";
 

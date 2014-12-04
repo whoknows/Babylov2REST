@@ -41,6 +41,11 @@ $app->get('/games/:limit', function($limit){
     echo json_encode(array_values(Game::getAllGames("", "LIMIT 0," . ($limit * 4))));
 });
 
+$app->post('/games', function($limit) use($app) {
+    //$app->request->post('');
+    echo json_encode(Game::post($data));
+});
+
 /**
  * Planification
  */
@@ -48,8 +53,8 @@ $app->get('/slot', function () {
     echo json_encode(array_values(Slot::getAllSlots()));
 });
 
-$app->put('/slot/:creneau/:user_id', function ($creneau, $user_id) {
-    echo json_encode(Slot::put($creneau, $user_id));
+$app->post('/slot/:creneau/:user_id', function ($creneau, $user_id) {
+    echo json_encode(Slot::post($creneau, $user_id));
 });
 
 $app->delete('/slot/:creneau/:user_id', function ($creneau, $user_id) {

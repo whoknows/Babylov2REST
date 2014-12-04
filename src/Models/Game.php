@@ -81,4 +81,9 @@ class Game
 
         return $ret;
     }
+
+    public static function post($data)
+    {
+        return "ok";
+    }
 }
