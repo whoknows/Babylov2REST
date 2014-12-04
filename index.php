@@ -8,6 +8,7 @@ require 'vendor/autoload.php';
 use \Models\User;
 use \Models\Game;
 use \Models\Slot;
+use \Models\HomeData;
 
 $app = new \Slim\Slim(array('debug' => true));
 
@@ -59,6 +60,13 @@ $app->post('/slot/:creneau/:user_id', function ($creneau, $user_id) {
 
 $app->delete('/slot/:creneau/:user_id', function ($creneau, $user_id) {
     echo json_encode(Slot::delete($creneau, $user_id));
+});
+
+/**
+ * Home data
+ */
+$app->get('/homedata', function () {
+    echo json_encode(HomeData::get());
 });
 
 $app->response()->header('Content-Type', 'application/json');

@@ -64,11 +64,14 @@ class Game
         return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public static function getTotalGames($filter = "")
+    public static function getTotalGames($group = "yearmonth")
     {
-        $sql = "SELECT COUNT(id) as total, CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth
+        $select = $group == "yearmonth" ? "CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth" : "date";
+        $sql = "SELECT
+                    COUNT(id) as total,
+                    $select
                 FROM game
-                GROUP BY yearmonth";
+                GROUP BY $group";
 
         $bdd = \Config\Database::getInstance();
         $req = $bdd->getConnection()->query($sql);
@@ -76,7 +79,7 @@ class Game
         $ret = array();
 
         foreach($req->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-            $ret[$row['yearmonth']] = $row['total'];
+            $ret[$row[$group]] = $row['total'];
         }
 
         return $ret;
