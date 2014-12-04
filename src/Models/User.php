@@ -79,6 +79,13 @@ class User
         $gameData['totalLastMonth'] = isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0;
     }
 
+    public static function getUserDetail($user_id)
+    {
+        /*['Victoires', 3, 2, 1, 4, 1, 2],
+        ['Defaites', 5, 2, 1, 4, 1, 2],
+        ['Ratio', 1, 0.8, 0.4, 0.45, 0.68, 0.84]*/
+    }
+
     public static function getGravatar($email, $s = 40, $d = 'mm', $r = 'x', $img = false, $atts = array())
     {
         $url = 'http://www.gravatar.com/avatar/';
