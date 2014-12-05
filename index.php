@@ -39,6 +39,10 @@ $app->get('/usergraph/:id', function ($id) {
     echo json_encode(Game::getUsersGameData("WHERE a.id = $id", "date"));
 });
 
+$app->get('/userdetail/:id', function ($id) {
+    echo json_encode(User::getUserDetail($id));
+});
+
 /**
  * Parties
  */
