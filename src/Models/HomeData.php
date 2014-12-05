@@ -19,11 +19,10 @@ class HomeData
 
     public static function getGraphData()
     {
-        $graphData = array('labels' => array(), 'datas' => array());
+        $graphData = array();
 
         foreach (Game::getTotalGames("date") as $date => $nb) {
-            $graphData['labels'][] = date('Y-m-d', strtotime($date));
-            $graphData['datas'][] = $nb;
+            $graphData[] = array(strtotime($date)*1000, intval($nb));
         }
 
         return $graphData;

@@ -41,11 +41,11 @@ class Game
         return $ret;
     }
 
-    public static function getUsersGameData($filter = "")
+    public static function getUsersGameData($filter = "", $group = "yearmonth")
     {
-        $sql = "SELECT id, username, email, enabled, SUM(won) as won, COUNT(won) as total,
-                        CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth FROM
-                (SELECT
+        $select = self::getSelect($group);
+        $sql = "SELECT id, username, email, enabled, SUM(won) as won, COUNT(won) as total, $select
+                FROM (SELECT
                     a.id,
                     username,
                     email,
@@ -56,7 +56,7 @@ class Game
                 INNER JOIN users_games b ON a.id = b.user_id
                 INNER JOIN game c ON c.id = b.game_id
                 $filter) osef
-                GROUP BY id, yearmonth";
+                GROUP BY id, $group";
 
         $bdd = \Config\Database::getInstance();
         $req = $bdd->getConnection()->query($sql);
@@ -66,7 +66,7 @@ class Game
 
     public static function getTotalGames($group = "yearmonth")
     {
-        $select = $group == "yearmonth" ? "CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth" : "date";
+        $select = self::getSelect($group);
         $sql = "SELECT
                     COUNT(id) as total,
                     $select
@@ -83,6 +83,11 @@ class Game
         }
 
         return $ret;
+    }
+
+    public static function getSelect($group)
+    {
+        return $group == "yearmonth" ? "CONCAT(YEAR(date), '.', IF(MONTH(date) < 10, CONCAT('0', MONTH(date)), MONTH(date))) as yearmonth" : "DATE(date) as date";
     }
 
     public static function post($data)
