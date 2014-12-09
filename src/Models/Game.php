@@ -92,6 +92,19 @@ class Game
 
     public static function post($data)
     {
-        return "ok";
+        $bdd = \Config\Database::getInstance();
+        $bdd = $bdd->getConnection();
+
+        $sql = "INSERT INTO game VALUES(default, '" . $data['date'] . "', " . $data['st1'] . ", " . $data['st2'] . ")";
+        $bdd->exec($sql);
+        $id = $bdd->lastInsertId();
+
+        $sql = "INSERT INTO users_games VALUES (default, " . $data['p1t1'] . ", " . $id . ", 1),
+                                               (default, " . $data['p2t1'] . ", " . $id . ", 1),
+                                               (default, " . $data['p1t2'] . ", " . $id . ", 2),
+                                               (default, " . $data['p1t2'] . ", " . $id . ", 2)";
+        $bdd->exec($sql);
+
+        return $id;
     }
 }

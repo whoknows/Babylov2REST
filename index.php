@@ -50,9 +50,8 @@ $app->get('/games/:limit', function($limit){
     echo json_encode(array_values(Game::getAllGames("", "LIMIT 0," . ($limit * 4))));
 });
 
-$app->post('/games', function($limit) use($app) {
-    //$app->request->post('');
-    echo json_encode(Game::post($data));
+$app->post('/games', function() use($app) {
+    echo json_encode(array('id' => Game::post($app->request->post())));
 });
 
 /**
