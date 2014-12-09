@@ -107,4 +107,17 @@ class Game
 
         return $id;
     }
+
+    public static function delete($id)
+    {
+        $sql = "DELETE FROM game WHERE id = $id";
+        $bdd = \Config\Database::getInstance();
+        $bdd->getConnection()->exec($sql);
+
+        $sql = "DELETE FROM users_games WHERE game_id = $id";
+        $bdd = \Config\Database::getInstance();
+        $bdd->getConnection()->exec($sql);
+
+        return 'ok';
+    }
 }

@@ -46,12 +46,16 @@ $app->get('/userdetail/:id', function ($id) {
 /**
  * Parties
  */
-$app->get('/games/:limit', function($limit){
-    echo json_encode(array_values(Game::getAllGames("", "LIMIT 0," . ($limit * 4))));
+$app->get('/games/:date', function($date){
+    echo json_encode(array_values(Game::getAllGames("WHERE date = '" . $date . "'")));
 });
 
 $app->post('/games', function() use($app) {
     echo json_encode(array('id' => Game::post($app->request->post())));
+});
+
+$app->delete('/games/:id', function($id) {
+    echo json_encode(Game::delete($id));
 });
 
 /**
