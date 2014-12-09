@@ -13,7 +13,7 @@ use \Models\HomeData;
 $app = new \Slim\Slim(array('debug' => true));
 
 /**
- * Utilisateurs
+ * Authentification
  */
 $app->get('/isconnected', function () {
     echo json_encode(User::isUserConnected());
@@ -27,6 +27,9 @@ $app->get('/login/:login/:password', function ($login, $password) {
     echo json_encode(User::doLoginAction($login, $password));
 });
 
+/**
+ * Utilisateurs
+ */
 $app->get('/users', function () {
     echo json_encode(array_values(User::getFullList()));
 });
