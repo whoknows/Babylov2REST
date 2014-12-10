@@ -102,7 +102,7 @@ class Game
         $sql = "INSERT INTO users_games VALUES (default, " . $data['p1t1'] . ", " . $id . ", 1),
                                                (default, " . $data['p2t1'] . ", " . $id . ", 1),
                                                (default, " . $data['p1t2'] . ", " . $id . ", 2),
-                                               (default, " . $data['p1t2'] . ", " . $id . ", 2)";
+                                               (default, " . $data['p2t2'] . ", " . $id . ", 2)";
         $bdd->exec($sql);
 
         return $id;
