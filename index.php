@@ -49,8 +49,23 @@ $app->get('/userdetail/:id', function ($id) {
 /**
  * Parties
  */
-$app->get('/games/:date', function($date){
-    echo json_encode(array_values(Game::getAllGames("WHERE date = '" . $date . "'")));
+$app->get('/games', function() use($app) {
+    $date = $app->request()->get('date');
+    $limit = $app->request()->get('limit');
+
+    if($date !== null || $date != ''){
+        $where = "WHERE date = '$date'";
+    } else {
+        $where = "";
+    }
+
+    if($limit !== null || $limit != ''){
+        $limit = "LIMIT 0, " . $limit * 4;
+    } else {
+        $limit = "";
+    }
+
+    echo json_encode(array_values(Game::getAllGames($where, $limit)));
 });
 
 $app->post('/games', function() use($app) {
