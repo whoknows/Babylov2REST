@@ -11,6 +11,7 @@ class User
         'gravatar' => '',
         'roles' => array(),
         'username' => 'N/A',
+        'email' => '',
         'gameData' => array(
             'played' => 0,
             'won' => 0,
@@ -49,6 +50,7 @@ class User
 
         $ret['id'] = $user['id'];
         $ret['username'] = $user['username'];
+        $ret['email'] = $user['email'];
         $ret['gravatar'] = self::getGravatar($user['email']);
         $ret['enabled'] = $user['enabled'];
         $ret['roles'] = explode(',', Roles::getRoles("WHERE user_id = " . $user['id']));
