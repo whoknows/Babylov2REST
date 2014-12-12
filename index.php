@@ -46,6 +46,13 @@ $app->get('/userdetail/:id', function ($id) {
     echo json_encode(User::getUserDetail($id));
 });
 
+$app->post('/users', function() use($app){
+    echo json_encode(User::post($app->request()->post()));
+});
+
+$app->put('/users', function() use($app){
+    echo json_encode(User::put($app->request()->post()));
+});
 /**
  * Parties
  */

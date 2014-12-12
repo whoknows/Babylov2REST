@@ -133,6 +133,16 @@ class User
         return null;
     }
 
+    public static function post($user)
+    {
+        return "ok";
+    }
+
+    public static function put($user)
+    {
+        return "ok";
+    }
+
     public static function getUserDetail($user_id)
     {
         $data = array(
