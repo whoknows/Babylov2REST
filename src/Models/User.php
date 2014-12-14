@@ -135,7 +135,24 @@ class User
 
     public static function post($user)
     {
-        return $user;
+        $bdd = \Config\Database::getInstance()->getConnection();
+        $sql = "INSERT INTO user VALUES (default, :username, :password, :enabled, :email)";
+
+        try {
+            $sth = $bdd->prepare($sql);
+            $sth->execute(array(
+                ':email' => isset($user['email']) ? $user['email'] : '',
+                ':username' => ucfirst($user['username']),
+                ':enabled' => isset($user['enabled']) ? $user['enabled'] : '0',
+                ':password' => $user['password']
+            ));
+
+            $user['id'] = $bdd->lastInsertId();
+
+            self::insertRoles($user);
+        } catch (\Exception $e) {
+            return $e->getTrace();
+        }
 
         return "ok";
     }
@@ -163,17 +180,28 @@ class User
             ));
         }
 
-        $sql = "DELETE FROM users_roles WHERE user_id = :id";
-        $sth = $bdd->prepare($sql);
-        $sth->execute(array(':id' => $user['id']));
-
-        foreach ($user['roles'] as $role) {
-            $sql = "INSERT INTO users_roles VALUES(:user_id, (SELECT id FROM roles WHERE name = :role))";
-            $sth = $bdd->prepare($sql);
-            $sth->execute(array(':user_id' => $user['id'], ':role' => $role));
-        }
+        self::insertRoles($user);
 
         return "ok";
+    }
+
+    public static function insertRoles($user)
+    {
+        $bdd = \Config\Database::getInstance()->getConnection();
+
+        if (isset($user['admin']) && isset($user['id'])) {
+            $sql = "DELETE FROM users_roles WHERE user_id = :id";
+            $sth = $bdd->prepare($sql);
+            $sth->execute(array(':id' => $user['id']));
+        }
+
+        if (isset($user['roles'])) {
+            foreach ($user['roles'] as $role) {
+                $sql = "INSERT INTO users_roles VALUES(:user_id, (SELECT id FROM roles WHERE name = :role))";
+                $sth = $bdd->prepare($sql);
+                $sth->execute(array(':user_id' => $user['id'], ':role' => $role));
+            }
+        }
     }
 
     public static function getUserDetail($user_id)

@@ -53,8 +53,8 @@ class Game
                     date,
                     IF((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1), 1, 0) as won
                 FROM user a
-                INNER JOIN users_games b ON a.id = b.user_id
-                INNER JOIN game c ON c.id = b.game_id
+                LEFT JOIN users_games b ON a.id = b.user_id
+                LEFT JOIN game c ON c.id = b.game_id
                 $filter) osef
                 GROUP BY id, $group";
 
