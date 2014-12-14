@@ -135,11 +135,44 @@ class User
 
     public static function post($user)
     {
+        return $user;
+
         return "ok";
     }
 
     public static function put($user)
     {
+        $bdd = \Config\Database::getInstance()->getConnection();
+        $sql = "UPDATE user SET email = :email, username = :username, enabled = :enabled WHERE id = :id";
+
+        $sth = $bdd->prepare($sql);
+        $sth->execute(array(
+            ':email' => $user['email'],
+            ':username' => $user['username'],
+            ':enabled' => $user['enabled'],
+            ':id' => $user['id']
+        ));
+
+        if (isset($user['password'])) {
+            $sql = "UPDATE user SET password = :pass WHERE id = :id";
+
+            $sth = $bdd->prepare($sql);
+            $sth->execute(array(
+                ':pass' => $user['password'],
+                ':id' => $user['id']
+            ));
+        }
+
+        $sql = "DELETE FROM users_roles WHERE user_id = :id";
+        $sth = $bdd->prepare($sql);
+        $sth->execute(array(':id' => $user['id']));
+
+        foreach ($user['roles'] as $role) {
+            $sql = "INSERT INTO users_roles VALUES(:user_id, (SELECT id FROM roles WHERE name = :role))";
+            $sth = $bdd->prepare($sql);
+            $sth->execute(array(':user_id' => $user['id'], ':role' => $role));
+        }
+
         return "ok";
     }
 
