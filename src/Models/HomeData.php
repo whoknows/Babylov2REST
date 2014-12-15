@@ -4,7 +4,7 @@ namespace Models;
 
 class HomeData
 {
-    public static $datas = array('victory', 'defeat', 'games', 'last', 'worst', 'fanny');
+    public static $datas = array('worst', 'fanny');
 
     public static function get()
     {
@@ -22,30 +22,10 @@ class HomeData
         $graphData = array();
 
         foreach (Game::getTotalGames("date") as $date => $nb) {
-            $graphData[] = array(strtotime($date)*1000, intval($nb));
+            $graphData[] = array(strtotime($date) * 1000, intval($nb));
         }
 
         return $graphData;
-    }
-
-    public static function victory()
-    {
-        return array('value' => 'Guillaume', 'desc' => '8 parties gagnées');
-    }
-
-    public static function defeat()
-    {
-        return array('value' => 'Cédric', 'desc' => '8 parties perdues');
-    }
-
-    public static function games()
-    {
-        return array('value' => '8', 'desc' => '8 parties jouées');
-    }
-
-    public static function last()
-    {
-        return array('value' => 'Stephane', 'desc' => '0.1 de score');
     }
 
     public static function worst()
