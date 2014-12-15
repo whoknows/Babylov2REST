@@ -70,6 +70,12 @@ class User
         $gameData['won' . $k] += $game['won'];
         $gameData['lost' . $k] += ($game['total'] - $game['won']);
         $gameData['played' . $k] += $game['total'];
+
+        if ($k != '') {
+            $gameData['won'] += $game['won'];
+            $gameData['lost'] += ($game['total'] - $game['won']);
+            $gameData['played'] += $game['total'];
+        }
     }
 
     public static function setTotals(&$gameData)
@@ -154,7 +160,7 @@ class User
             return $e->getTrace();
         }
 
-        return "ok";
+        return $user['id'];
     }
 
     public static function put($user)
@@ -182,7 +188,22 @@ class User
 
         self::insertRoles($user);
 
-        return "ok";
+        return $user['id'];
+    }
+
+    public static function delete($user)
+    {
+        $bdd = \Config\Database::getInstance()->getConnection();
+
+        $sql = "DELETE FROM user WHERE id = :id";
+        $sth = $bdd->prepare($sql);
+        $sth->execute(array('id' => $user['id']));
+
+        $sql = "DELETE FROM users_roles WHERE user_id = :id";
+        $sth = $bdd->prepare($sql);
+        $sth->execute(array('id' => $user['id']));
+
+        return $user['id'];
     }
 
     public static function insertRoles($user)

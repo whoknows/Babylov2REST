@@ -44,14 +44,14 @@ class Game
     public static function getUsersGameData($filter = "", $group = "yearmonth")
     {
         $select = self::getSelect($group);
-        $sql = "SELECT id, username, email, enabled, SUM(won) as won, COUNT(won) as total, $select
+        $sql = "SELECT id, username, email, enabled, SUM(won) as won, IF(date IS NULL, 0, COUNT(won)) as total, $select
                 FROM (SELECT
                     a.id,
                     username,
                     email,
                     enabled,
                     date,
-                    IF((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1), 1, 0) as won
+                    IF(team IS NOT NULL && ((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1)), 1, 0) as won
                 FROM user a
                 LEFT JOIN users_games b ON a.id = b.user_id
                 LEFT JOIN game c ON c.id = b.game_id

@@ -53,6 +53,11 @@ $app->post('/users', function() use($app){
 $app->put('/users', function() use($app){
     echo json_encode(User::put($app->request()->post()));
 });
+
+$app->delete('/users', function() use($app){
+    echo json_encode(User::delete($app->request()->post()));
+});
+
 /**
  * Parties
  */
