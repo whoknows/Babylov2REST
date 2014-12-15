@@ -39,7 +39,10 @@ $app->get('/users/:id', function ($id) {
 });
 
 $app->get('/usergraph/:id', function ($id) {
-    echo json_encode(Game::getUsersGameData("WHERE a.id = $id", "date"));
+    echo json_encode(array(
+        'userdata' => Game::getUsersGameData("WHERE a.id = $id", "date", false),
+        'total' => Game::getTotalGames("yearmonth")
+    ));
 });
 
 $app->get('/userdetail/:id', function ($id) {

@@ -41,10 +41,14 @@ class Game
         return $ret;
     }
 
-    public static function getUsersGameData($filter = "", $group = "yearmonth")
+    public static function getUsersGameData($filter = "", $group = "yearmonth", $full = true)
     {
         $select = self::getSelect($group);
-        $sql = "SELECT id, username, email, enabled, SUM(won) as won, IF(date IS NULL, 0, COUNT(won)) as total, $select
+        $fullselect = "";
+        if($full){
+            $fullselect = "id, username, email, enabled,";
+        }
+        $sql = "SELECT $fullselect SUM(won) as won, IF(date IS NULL, 0, COUNT(won)) as total, $select
                 FROM (SELECT
                     a.id,
                     username,
@@ -64,13 +68,14 @@ class Game
         return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public static function getTotalGames($group = "yearmonth")
+    public static function getTotalGames($group = "yearmonth", $filter = "")
     {
         $select = self::getSelect($group);
         $sql = "SELECT
                     COUNT(id) as total,
                     $select
                 FROM game
+                $filter
                 GROUP BY $group";
 
         $bdd = \Config\Database::getInstance();
