@@ -4,7 +4,7 @@ namespace Models;
 
 class HomeData
 {
-    public static $datas = array('worst', 'fanny');
+    public static $datas = array('fanny');
 
     public static function get()
     {
@@ -35,6 +35,12 @@ class HomeData
 
     public static function fanny()
     {
-        return array('value' => 'Adel. & Nico.', 'desc' => 'Ils ont pris fanny');
+        $data = array_values(Game::getAllGames("WHERE score_team1 = 0 OR score_team2 = 0", "LIMIT 0,4"))[0];
+
+        if($data['st1'] == 0){
+            return array('users' => array($data['p1t1'], $data['p2t1']), 'date' => $data['date']);
+        } else {
+            return array('users' => array($data['p1t2'], $data['p2t2']), 'date' => $data['date']);
+        }
     }
 }

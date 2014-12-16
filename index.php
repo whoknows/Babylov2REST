@@ -31,7 +31,7 @@ $app->get('/login/:login/:password', function ($login, $password) {
  * Utilisateurs
  */
 $app->get('/users', function () {
-    echo json_encode(array_values(User::getFullList()));
+    echo json_encode(array_values(User::getFullList("WHERE username != 'admin'")));
 });
 
 $app->get('/users/:id', function ($id) {
