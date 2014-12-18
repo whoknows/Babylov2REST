@@ -6,6 +6,7 @@ session_start();
 require 'vendor/autoload.php';
 
 use \Models\User;
+use \Models\UsersData;
 use \Models\Game;
 use \Models\Slot;
 use \Models\HomeData;
@@ -46,7 +47,7 @@ $app->get('/usergraph/:id', function ($id) {
 });
 
 $app->get('/userdetail/:id', function ($id) {
-    echo json_encode(User::getUserDetail($id));
+    echo json_encode(UsersData::getUserDetail($id));
 });
 
 $app->post('/users', function() use($app){
