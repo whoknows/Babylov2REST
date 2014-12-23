@@ -56,15 +56,9 @@ class Game
                     email,
                     enabled,
                     date,
-                    CASE
-                        WHEN team = 1 AND score_team1 > score_team2 THEN score_team1
-                        WHEN team = 2 AND score_team1 < score_team2 THEN score_team2
-                    ELSE 0 END as given,
-                    CASE
-                        WHEN team = 1 AND score_team1 < score_team2 THEN score_team1
-                        WHEN team = 2 AND score_team1 > score_team2 THEN score_team2
-                    ELSE 0 END as taken,
-                    IF(team IS NOT NULL && ((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1)), 1, 0) as won
+                    IF(team IS NOT NULL AND team = 1, score_team1, score_team2) as given,
+                    IF(team IS NOT NULL AND team = 2, score_team1, score_team2) as taken,
+                    IF(team IS NOT NULL AND ((team = 1 AND score_team1 > score_team2) OR (team = 2 AND score_team2 > score_team1)), 1, 0) as won
                 FROM user a
                 LEFT JOIN users_games b ON a.id = b.user_id
                 LEFT JOIN game c ON c.id = b.game_id
