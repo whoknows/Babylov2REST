@@ -20,10 +20,10 @@ class UsersData
         $data = array(
             'gravatar' => "http://www.gravatar.com/avatar/22c64f33e43b433721446315a683ee5a?s=150&d=mm&r=x",
             'userDetail' => array(
-                'nbTaken' 3,
-                'nbGiven' 3,
-                'nbTakenAvg' 3,
-                'nbGivenAvg' 3,
+                'nbTaken' => 3,
+                'nbGiven' => 3,
+                'nbTakenAvg' => 3,
+                'nbGivenAvg' => 3,
                 'nemesis' => 3,
                 'worstEnemy' => 3,
                 'bestMate' => 3,

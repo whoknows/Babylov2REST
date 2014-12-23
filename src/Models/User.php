@@ -16,14 +16,20 @@ class User
             'played' => 0,
             'won' => 0,
             'lost' => 0,
+            'given' => 0,
+            'taken' => 0,
             'total' => 0,
             'playedThisMonth' => 0,
             'wonThisMonth' => 0,
             'lostThisMonth' => 0,
+            'givenThisMonth' => 0,
+            'takenThisMonth' => 0,
             'totalThisMonth' => 0,
             'playedLastMonth' => 0,
             'wonLastMonth' => 0,
             'lostLastMonth' => 0,
+            'givenLastMonth' => 0,
+            'takenLastMonth' => 0,
             'totalLastMonth' => 0
         )
     );
@@ -70,11 +76,15 @@ class User
         $gameData['won' . $k] += $game['won'];
         $gameData['lost' . $k] += ($game['total'] - $game['won']);
         $gameData['played' . $k] += $game['total'];
+        $gameData['given' . $k] += $game['given'];
+        $gameData['taken' . $k] += $game['taken'];
 
         if ($k != '') {
             $gameData['won'] += $game['won'];
             $gameData['lost'] += ($game['total'] - $game['won']);
             $gameData['played'] += $game['total'];
+            $gameData['given'] += $game['given'];
+            $gameData['taken'] += $game['taken'];
         }
     }
 
