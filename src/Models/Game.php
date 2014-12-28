@@ -8,8 +8,8 @@ class Game
     public static function getAllGames($filter = "", $limit = "")
     {
         $sql = "SELECT
-                    game.id, date, score_team1, score_team2, users_games.`user_id`, `team`,
-                    comment.comment, comment.user_id as author, comment.created_on, comment.id as comment_id
+                    game.id, date, score_team1, score_team2, users_games.`user_id`, `team`#,
+                    #comment.comment, comment.user_id as author, comment.created_on, comment.id as comment_id
                 FROM game
                 INNER JOIN `users_games` ON `game_id` = game.id
                 LEFT JOIN comment ON comment.game_id = game.id
@@ -35,14 +35,14 @@ class Game
                 $ret[$row['id']]['comments'] = array();
             }
 
-            if ($row['comment'] != null) {
+            /*if ($row['comment'] != null) {
                 $ret[$row['id']]['comments'][$row['comment_id']] = array(
                     'id' => $row['comment_id'],
                     'comment' => $row['comment'],
                     'author' => $row['author'],
                     'created_on' => $row['created_on']
                 );
-            }
+            }*/
 
             if(isset($ret[$row['id']]['p1t'.$row['team']])){
                 $ret[$row['id']]['p2t'.$row['team']] = $row['user_id'];

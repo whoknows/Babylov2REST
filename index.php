@@ -64,6 +64,7 @@ if($usr !== null){
      * Parties
      */
     $app->get('/games', function() use($app) {
+        //var_dump($app->request()->get());exit;
         $date = $app->request()->get('date');
         $limit = $app->request()->get('limit');
 
