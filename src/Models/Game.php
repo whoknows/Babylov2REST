@@ -12,7 +12,7 @@ class Game
                     #comment.comment, comment.user_id as author, comment.created_on, comment.id as comment_id
                 FROM game
                 INNER JOIN `users_games` ON `game_id` = game.id
-                LEFT JOIN comment ON comment.game_id = game.id
+                #LEFT JOIN comment ON comment.game_id = game.id
                 $filter
                 ORDER BY date DESC, game.id DESC, users_games.id
                 $limit";
