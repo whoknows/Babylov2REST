@@ -64,23 +64,13 @@ if($usr !== null){
      * Parties
      */
     $app->get('/games', function() use($app) {
-        //var_dump($app->request()->get());exit;
-        $date = $app->request()->get('date');
-        $limit = $app->request()->get('limit');
+        $limit = $app->request()->get('limit', "");
+        $date = $app->request()->get('date', null);
 
-        if($date !== null || $date != ''){
-            $where = "WHERE date = '$date'";
-        } else {
-            $where = "";
-        }
-
-        if($limit !== null || $limit != ''){
-            $limit = "LIMIT 0, " . $limit * 4;
-        } else {
-            $limit = "";
-        }
-
-        echo json_encode(array_values(Game::getAllGames($where, $limit)));
+        echo json_encode(array_values(Game::getAllGames(
+            $date !== null ? "WHERE date = '$date'" : "",
+            $limit != "" ? ("LIMIT 0, " . $limit * 4) : ""
+        )));
     });
 
     $app->post('/games', function() use($app) {
