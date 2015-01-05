@@ -234,4 +234,54 @@ class User
             }
         }
     }
+
+
+/*
+    AND g.date BETWEEN '" . date('Y-m-01', strtotime($periode)) . " 00:00:00' AND '" . date('Y-m-t', strtotime($periode)) . " 00:00:00'
+
+    (
+        SELECT pl.username
+        FROM baby_played p
+        INNER JOIN baby_game g ON p.id_game = g.id
+        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
+        INNER JOIN baby_user pl ON pl.id = p2.id_player
+        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 2 AND score_team1 < score_team2, p2.team = 1 AND score_team1 > score_team2)" . $where . "
+        GROUP BY p2.id_player
+        ORDER BY COUNT(p.id) DESC
+        LIMIT 0,1
+    ) as bestOponent,
+    (
+        SELECT pl.username
+        FROM baby_played p
+        INNER JOIN baby_game g ON p.id_game = g.id
+        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
+        INNER JOIN baby_user pl ON pl.id = p2.id_player
+        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 2 AND score_team1 > score_team2, p2.team = 1 AND score_team1 < score_team2)" . $where . "
+        GROUP BY p2.id_player
+        ORDER BY COUNT(p.id) DESC
+        LIMIT 0,1
+    ) as worstOponent,
+    (
+        SELECT pl.username
+        FROM baby_played p
+        INNER JOIN baby_game g ON p.id_game = g.id
+        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
+        INNER JOIN baby_user pl ON pl.id = p2.id_player
+        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 1 AND score_team1 > score_team2, p2.team = 2  AND score_team1 < score_team2)" . $where . "
+        GROUP BY p2.id_player
+        ORDER BY COUNT(p.id) DESC
+        LIMIT 0,1
+    ) as bestMate,
+    (
+        SELECT pl.username
+        FROM baby_played p
+        INNER JOIN baby_game g ON p.id_game = g.id
+        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
+        INNER JOIN baby_user pl ON pl.id = p2.id_player
+        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 1 AND score_team1 < score_team2, p2.team = 2  AND score_team1 > score_team2)" . $where . "
+        GROUP BY p2.id_player
+        ORDER BY COUNT(p.id) DESC
+        LIMIT 0,1
+    ) worstMate
+*/
 }
