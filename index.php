@@ -5,6 +5,12 @@ session_start();
 
 require 'vendor/autoload.php';
 
+if(!is_file('config.php')){
+    require 'config.dist.php';
+} else {
+    require 'config.php';
+}
+
 use \Models\User;
 use \Models\Game;
 use \Models\Slot;
@@ -25,7 +31,7 @@ $app = new \Slim\Slim(array(
 $app = new \Slim\Slim(array(
     'debug' => true,
     'cookies.encrypt' => true,
-    'cookies.secret_key' => 'MY_SECRET_KEY',
+    'cookies.secret_key' => COOKIE_KEY,
     'cookies.cipher' => MCRYPT_RIJNDAEL_256,
     'cookies.cipher_mode' => MCRYPT_MODE_CBC
 ));

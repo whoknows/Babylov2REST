@@ -6,10 +6,10 @@ class Database
 {
     private $_connection;
     private static $_instance;
-    private $_host = "localhost";
-    private $_username = "root";
-    private $_password = "secret";
-    private $_database = "babyv2";
+    private $_host = DB_HOST;
+    private $_username = DB_USER;
+    private $_password = DB_PASSWORD;
+    private $_database = DB_DATABASE;
 
     private function __construct()
     {
