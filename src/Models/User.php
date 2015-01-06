@@ -45,6 +45,7 @@ class User
 
             self::incrementGameData($data[$userGame['id']]['gameData'], $userGame);
             self::setTotals($data[$userGame['id']]['gameData']);
+            self::getComplementaryData($data[$userGame['id']]['gameData'], $userGame['id']);
         }
 
         return $data;
@@ -97,7 +98,7 @@ class User
         $gameData['totalLastMonth'] = isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0;
     }
 
-    public static function getComplementaryData()
+    public static function getComplementaryData(&$gameData, $id)
     {
         $conditions = array(
             'bestOponent' => "IF(ug.team = 1, ug2.team = 2 AND score_team1 < score_team2, ug2.team = 1 AND score_team1 > score_team2)",
@@ -106,24 +107,26 @@ class User
             'worstMate' => "IF(ug.team = 1, ug2.team = 1 AND score_team1 < score_team2, ug2.team = 2  AND score_team1 > score_team2)"
         );
 
-        $return = array();
-        foreach ($conditions as $field => $where) {
-            //$where .= "AND g.date BETWEEN '" . date('Y-m-01', strtotime($periode)) . " 00:00:00' AND '" . date('Y-m-t', strtotime($periode)) . " 00:00:00'";
-            $sql = "SELECT u.id
-                    FROM users_games ug
-                    INNER JOIN game g ON g.id = ug.game_id
-                    INNER JOIN users_games ug2 ON ug2.game_id = g.id AND ug2.user_id != ug.user_id
-                    INNER JOIN user u ON u.id = ug2.user_id
-                    WHERE ug.user_id = $id AND $where
-                    GROUP BY ug2.user_id
-                    ORDER BY COUNT(ug.id) DESC
-                    LIMIT 0,1";
-            $req = \Config\Database::getInstance()->getConnection()->query($sql);
-            $res = $req->fetch(\PDO::FETCH_ASSOC);
-            $return[$field] = $res['id'];
+        foreach (array('', 'ThisMonth', 'LastMonth') as $period) {
+            foreach ($conditions as $field => $where) {
+                if($period != ''){
+                    $osef = $period == 'ThisMonth' ? 'now' : 'last month';
+                    $where .= " AND g.date BETWEEN '" . date('Y-m-01', strtotime($osef)) . " 00:00:00' AND '" . date('Y-m-t', strtotime($osef)) . " 00:00:00'";
+                }
+                $sql = "SELECT u.id
+                        FROM users_games ug
+                        INNER JOIN game g ON g.id = ug.game_id
+                        INNER JOIN users_games ug2 ON ug2.game_id = g.id AND ug2.user_id != ug.user_id
+                        INNER JOIN user u ON u.id = ug2.user_id
+                        WHERE ug.user_id = $id AND $where
+                        GROUP BY ug2.user_id
+                        ORDER BY COUNT(ug.id) DESC
+                        LIMIT 0,1";
+                $req = \Config\Database::getInstance()->getConnection()->query($sql);
+                $res = $req->fetch(\PDO::FETCH_ASSOC);
+                $gameData[$field . $period] = intval($res['id']);
+            }
         }
-
-        return $return;
     }
 
     public static function getGravatar($email, $s = 40, $d = 'mm', $r = 'x', $img = false, $atts = array())
