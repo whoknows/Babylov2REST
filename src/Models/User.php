@@ -124,6 +124,8 @@ class User
 
     public static function isUserConnected()
     {
+        //$app->setCookie('_hsio', "My Data", '1 day');
+        //$app->getCookie('_hsio');
         return isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : null;
     }
 

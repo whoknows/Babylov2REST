@@ -10,7 +10,25 @@ use \Models\Game;
 use \Models\Slot;
 use \Models\HomeData;
 
-$app = new \Slim\Slim(array('debug' => true));
+/*
+$app = new \Slim\Slim(array(
+    'cookies.encrypt' => true,
+    'cookies.secret_key' => 'MY_SECRET_KEY',
+    'cookies.cipher' => MCRYPT_RIJNDAEL_256,
+    'cookies.cipher_mode' => MCRYPT_MODE_CBC
+        ));
+
+ $app->setCookie('_hsio', "My Data", '1 day');
+ $app->getCookie('_hsio');
+ */
+
+$app = new \Slim\Slim(array(
+    'debug' => true,
+    'cookies.encrypt' => true,
+    'cookies.secret_key' => 'MY_SECRET_KEY',
+    'cookies.cipher' => MCRYPT_RIJNDAEL_256,
+    'cookies.cipher_mode' => MCRYPT_MODE_CBC
+));
 
 $usr = User::isUserConnected();
 
