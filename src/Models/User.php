@@ -97,6 +97,35 @@ class User
         $gameData['totalLastMonth'] = isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0;
     }
 
+    public static function getComplementaryData()
+    {
+        $conditions = array(
+            'bestOponent' => "IF(ug.team = 1, ug2.team = 2 AND score_team1 < score_team2, ug2.team = 1 AND score_team1 > score_team2)",
+            'worstOponent' => "IF(ug.team = 1, ug2.team = 2 AND score_team1 > score_team2, ug2.team = 1 AND score_team1 < score_team2)",
+            'bestMate' => "IF(ug.team = 1, ug2.team = 1 AND score_team1 > score_team2, ug2.team = 2  AND score_team1 < score_team2)",
+            'worstMate' => "IF(ug.team = 1, ug2.team = 1 AND score_team1 < score_team2, ug2.team = 2  AND score_team1 > score_team2)"
+        );
+
+        $return = array();
+        foreach ($conditions as $field => $where) {
+            //$where .= "AND g.date BETWEEN '" . date('Y-m-01', strtotime($periode)) . " 00:00:00' AND '" . date('Y-m-t', strtotime($periode)) . " 00:00:00'";
+            $sql = "SELECT u.id
+                    FROM users_games ug
+                    INNER JOIN game g ON g.id = ug.game_id
+                    INNER JOIN users_games ug2 ON ug2.game_id = g.id AND ug2.user_id != ug.user_id
+                    INNER JOIN user u ON u.id = ug2.user_id
+                    WHERE ug.user_id = $id AND $where
+                    GROUP BY ug2.user_id
+                    ORDER BY COUNT(ug.id) DESC
+                    LIMIT 0,1";
+            $req = \Config\Database::getInstance()->getConnection()->query($sql);
+            $res = $req->fetch(\PDO::FETCH_ASSOC);
+            $return[$field] = $res['id'];
+        }
+
+        return $return;
+    }
+
     public static function getGravatar($email, $s = 40, $d = 'mm', $r = 'x', $img = false, $atts = array())
     {
         $url = 'http://www.gravatar.com/avatar/';
@@ -241,53 +270,4 @@ class User
         }
     }
 
-
-/*
-    AND g.date BETWEEN '" . date('Y-m-01', strtotime($periode)) . " 00:00:00' AND '" . date('Y-m-t', strtotime($periode)) . " 00:00:00'
-
-    (
-        SELECT pl.username
-        FROM baby_played p
-        INNER JOIN baby_game g ON p.id_game = g.id
-        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
-        INNER JOIN baby_user pl ON pl.id = p2.id_player
-        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 2 AND score_team1 < score_team2, p2.team = 1 AND score_team1 > score_team2)" . $where . "
-        GROUP BY p2.id_player
-        ORDER BY COUNT(p.id) DESC
-        LIMIT 0,1
-    ) as bestOponent,
-    (
-        SELECT pl.username
-        FROM baby_played p
-        INNER JOIN baby_game g ON p.id_game = g.id
-        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
-        INNER JOIN baby_user pl ON pl.id = p2.id_player
-        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 2 AND score_team1 > score_team2, p2.team = 1 AND score_team1 < score_team2)" . $where . "
-        GROUP BY p2.id_player
-        ORDER BY COUNT(p.id) DESC
-        LIMIT 0,1
-    ) as worstOponent,
-    (
-        SELECT pl.username
-        FROM baby_played p
-        INNER JOIN baby_game g ON p.id_game = g.id
-        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
-        INNER JOIN baby_user pl ON pl.id = p2.id_player
-        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 1 AND score_team1 > score_team2, p2.team = 2  AND score_team1 < score_team2)" . $where . "
-        GROUP BY p2.id_player
-        ORDER BY COUNT(p.id) DESC
-        LIMIT 0,1
-    ) as bestMate,
-    (
-        SELECT pl.username
-        FROM baby_played p
-        INNER JOIN baby_game g ON p.id_game = g.id
-        INNER JOIN baby_played p2 ON p2.id_game = g.id AND p2.id_player != p.id_player
-        INNER JOIN baby_user pl ON pl.id = p2.id_player
-        WHERE p.id_player = " . $id . " AND IF(p.team = 1, p2.team = 1 AND score_team1 < score_team2, p2.team = 2  AND score_team1 > score_team2)" . $where . "
-        GROUP BY p2.id_player
-        ORDER BY COUNT(p.id) DESC
-        LIMIT 0,1
-    ) worstMate
-*/
 }
