@@ -122,14 +122,16 @@ class User
         return null;
     }
 
-    public static function isUserConnected()
+    public static function isUserConnected($app)
     {
-        //$app->setCookie('_hsio', "My Data", '1 day');
-        //$app->getCookie('_hsio');
+        if ($app->getCookie('currentUser')) {
+            return json_decode($app->getCookie('currentUser'));
+        }
+
         return isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : null;
     }
 
-    public static function doLoginAction($login, $password)
+    public static function doLoginAction($login, $password, $app)
     {
         //$login = \PDO::quote($login);
         //$password = \PDO::quote($password);
@@ -137,6 +139,7 @@ class User
 
         if ($user !== null) {
             $_SESSION['currentUser'] = $user;
+            $app->setCookie('currentUser', json_encode($user), '30 day');
         } else {
             $user = array('message' => 'Mauvais login/mot de passe.');
         }
@@ -144,9 +147,10 @@ class User
         return $user;
     }
 
-    public static function doLogoutAction()
+    public static function doLogoutAction($app)
     {
         $_SESSION['currentUser'] = null;
+        $app->deleteCookie('currentUser');
 
         return null;
     }

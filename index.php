@@ -17,13 +17,6 @@ use \Models\Slot;
 use \Models\HomeData;
 
 /*
-$app = new \Slim\Slim(array(
-    'cookies.encrypt' => true,
-    'cookies.secret_key' => 'MY_SECRET_KEY',
-    'cookies.cipher' => MCRYPT_RIJNDAEL_256,
-    'cookies.cipher_mode' => MCRYPT_MODE_CBC
-        ));
-
  $app->setCookie('_hsio', "My Data", '1 day');
  $app->getCookie('_hsio');
  */
@@ -36,7 +29,7 @@ $app = new \Slim\Slim(array(
     'cookies.cipher_mode' => MCRYPT_MODE_CBC
 ));
 
-$usr = User::isUserConnected();
+$usr = User::isUserConnected($app);
 
 /**
  * Authentification
@@ -45,12 +38,12 @@ $app->get('/isconnected', function () use ($usr) {
     echo json_encode($usr);
 });
 
-$app->get('/logout', function () {
-    echo json_encode(User::doLogoutAction());
+$app->get('/logout', function () use($app) {
+    echo json_encode(User::doLogoutAction($app));
 });
 
-$app->get('/login/:login/:password', function ($login, $password) {
-    echo json_encode(User::doLoginAction($login, $password));
+$app->get('/login/:login/:password', function ($login, $password) use($app) {
+    echo json_encode(User::doLoginAction($login, $password, $app));
 });
 
 if($usr !== null){
