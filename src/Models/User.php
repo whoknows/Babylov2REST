@@ -165,9 +165,10 @@ class User
 
     public static function doLoginAction($login, $password, $app)
     {
-        //$login = \PDO::quote($login);
-        //$password = \PDO::quote($password);
-        $user = User::getUniqueUser(self::getFullList("WHERE username = '$login' AND password = '$password'"));
+        $bdd = \Config\Database::getInstance()->getConnection();
+        $login = $bdd->quote($login);
+        $password = $bdd->quote($password);
+        $user = User::getUniqueUser(self::getFullList("WHERE username = $login AND password = $password"));
 
         if ($user !== null) {
             $_SESSION['currentUser'] = $user;
