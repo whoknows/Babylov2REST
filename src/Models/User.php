@@ -94,8 +94,8 @@ class User
         $total = Game::getTotalGames();
 
         $gameData['total'] = array_sum($total);
-        $gameData['totalThisMonth'] = isset($total[date('Y.m')]) ? $total[date('Y.m')] : 0;
-        $gameData['totalLastMonth'] = isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0;
+        $gameData['totalThisMonth'] = intval(isset($total[date('Y.m')]) ? $total[date('Y.m')] : 0);
+        $gameData['totalLastMonth'] = intval(isset($total[date('Y.m', strtotime('last month'))]) ? $total[date('Y.m', strtotime('last month'))] : 0);
     }
 
     public static function getComplementaryData(&$gameData, $id)
