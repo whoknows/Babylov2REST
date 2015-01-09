@@ -274,4 +274,15 @@ class User
         }
     }
 
+    public static function userExists($username)
+    {
+        $bdd = \Config\Database::getInstance()->getConnection();
+
+        $sql = "SELECT * FROM user WHERE username LIKE :username";
+        $sth = $bdd->prepare($sql);
+        $sth->execute(array('username' => $username));
+
+        return $sth->rowCount() !== 0;
+    }
+
 }

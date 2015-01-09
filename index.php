@@ -16,11 +16,6 @@ use \Models\Game;
 use \Models\Slot;
 use \Models\HomeData;
 
-/*
- $app->setCookie('_hsio', "My Data", '1 day');
- $app->getCookie('_hsio');
- */
-
 $app = new \Slim\Slim(array(
     'debug' => true,
     'cookies.encrypt' => true,
@@ -46,6 +41,14 @@ $app->get('/login/:login/:password', function ($login, $password) use($app) {
     echo json_encode(User::doLoginAction($login, $password, $app));
 });
 
+$app->get('/userexists', function () use($app) {
+    echo json_encode(User::userExists($app->request()->get('user')));
+});
+
+$app->post('/users', function() use($app){
+    echo json_encode(User::post($app->request()->post()));
+});
+
 if($usr !== null){
     /**
      * Utilisateurs
@@ -63,10 +66,6 @@ if($usr !== null){
             'userdata' => Game::getUsersGameData("WHERE a.id = $id", "date", false),
             'total' => Game::getTotalGames("yearmonth")
         ));
-    });
-
-    $app->post('/users', function() use($app){
-        echo json_encode(User::post($app->request()->post()));
     });
 
     $app->put('/users', function() use($app){
